@@ -13,9 +13,10 @@
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
-import java.io.Console;
 
 public class Main {
+
+    private static final double INPUT_ERROR = -1.0; // константа для обработки ошибки ввода числовых значений
 
     public static void main(String[] args) {
 
@@ -24,31 +25,24 @@ public class Main {
 
         ItemsList itemsForCheck = new ItemsList();  // создаём новый объект списка товаров
         int peoplesInCheck;                         // количество человек в счёте
-        String itemName;
-        double itemPrice;
+        String itemName;                            // название товара
+        double itemPrice;                           // стоимость товара
 
         System.out.println("На сколько человек разделить счёт? (введите целое число от 2 и больше)");
 
         /* Ввод пользователем вручную количества человек в счёте. Допустимое значение - от 2 и больше */
         while (true) {
-            peoplesInCheck = scanner.nextInt();
-
-            if (peoplesInCheck > 1) {
+            peoplesInCheck = scanPeoplesInCheck();
+            if (peoplesInCheck != -1) {
                 break;
-            }
-            else if (peoplesInCheck == 1) {
-                System.out.println("Ошибка! В вашем случае незачем делить счёт. Введите целое число от 2 и больше.");
-            }
-            else {
-                System.out.println("Ошибка! Введите целое число от 2 и больше.");
             }
         }
 
         /* Ввод пользователем вручную товаров и их стоимости */
         while (true) {
             System.out.println("Введите название товара: ");
-            itemName = ItemName();
-            itemPrice = ItemPrice();
+            itemName = scanItemName();
+            itemPrice = scanItemPrice();
 
             if (itemPrice != -1.0) {
                 itemsForCheck.addItem(itemName, itemPrice);
@@ -68,7 +62,7 @@ public class Main {
 
         /* Построчный вывод всех добавленных товаров */
         for (int i = 0; i < itemsForCheck.items.size(); i++) {
-            System.out.println("Добавленные товары: " + itemsForCheck.items.get(i) + "\n");
+            System.out.println("Добавленные товары: " + itemsForCheck.items.get(i));
         }
 
         double splitWise = itemsForCheck.totalPrice / peoplesInCheck;       // сумма к оплате каждым человеком
@@ -100,14 +94,39 @@ public class Main {
         }
     }
 
+    /* Метод для ввода количества человек в счёте */
+    public static int scanPeoplesInCheck() {
+            Scanner scanner = new Scanner(System.in);
+
+            try {
+                int peoples = scanner.nextInt();
+                if (peoples > 1) {
+                    return peoples;
+                }
+                else if (peoples == 1) {
+                    System.out.println("Ошибка! В вашем случае незачем делить счёт. Введите целое число от 2 и больше.");
+                    return (int) INPUT_ERROR;
+                }
+                else {
+                    System.out.println("Ошибка! Введите целое число от 2 и больше.");
+                    return (int) INPUT_ERROR;
+                }
+            }
+
+            catch (InputMismatchException e) {
+                System.out.println("Ошибка! Введите целое число от 2 и больше.");
+                return (int) INPUT_ERROR;
+            }
+        }
+
     /* Метод для ввода названия товара */
-    public static String ItemName() {
+    public static String scanItemName() {
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
     }
 
     /* Метод для ввода стоимости товара */
-    public static double ItemPrice() {
+    public static double scanItemPrice() {
         Scanner scanner = new Scanner(System.in);
         try {
             System.out.println("Введите стоимость товара (между рублями и копейками поставьте запятую!): ");
@@ -115,7 +134,7 @@ public class Main {
         }
         catch (InputMismatchException e) {
             System.out.println("Ошибка! Данные не сохранены. Хотите добавить ещё товар? Да - наберите любой символ, Нет - наберите \"Завершить\"");
-            return -1.0;
+            return INPUT_ERROR;
         }
     }
 }
