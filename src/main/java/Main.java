@@ -33,7 +33,7 @@ public class Main {
         /* Ввод пользователем вручную количества человек в счёте. Допустимое значение - от 2 и больше */
         while (true) {
             peoplesInCheck = scanPeoplesInCheck();
-            if (peoplesInCheck != -1) {
+            if (peoplesInCheck != (int) INPUT_ERROR) {
                 break;
             }
         }
@@ -44,7 +44,7 @@ public class Main {
             itemName = scanItemName();
             itemPrice = scanItemPrice();
 
-            if (itemPrice != -1.0) {
+            if (itemPrice != INPUT_ERROR) {
                 itemsForCheck.addItem(itemName, itemPrice);
                 System.out.println("Товар добавлен. Хотите добавить ещё один товар? Да - наберите любой символ, Нет - наберите \"Завершить\"");
                 String command = scanner.next();
